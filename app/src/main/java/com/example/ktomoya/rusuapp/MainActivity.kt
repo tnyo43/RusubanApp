@@ -1,6 +1,8 @@
 package com.example.ktomoya.rusubanapp
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,5 +19,25 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, VoiceMessageActivity::class.java)
             startActivity(intent)
         })
+
+        requestPermissions()
+    }
+
+    fun requestPermissions() {
+        val requiredPermissions = listOf<String>(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val requests = mutableListOf<String>()
+        for (required in requiredPermissions) {
+            if (this.checkCallingOrSelfPermission(required) != PackageManager.PERMISSION_GRANTED) {
+                requests.add (required)
+            }
+        }
+
+        if (!requests.isEmpty()) {
+            requestPermissions(requests.toTypedArray(), 101);
+        }
     }
 }
