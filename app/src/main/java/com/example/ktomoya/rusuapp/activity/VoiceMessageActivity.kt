@@ -8,11 +8,15 @@ import java.io.File
 import java.io.IOException
 import android.media.MediaPlayer
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ListView
 import android.widget.Toast
 import com.example.ktomoya.rusuapp.helper.DBOpenHelper
 import com.example.ktomoya.rusuapp.model.VoiceMessage
+import com.example.ktomoya.rusuapp.view.VoiceMessageAdapter
+import java.util.*
 
 
 class VoiceMessageActivity : AppCompatActivity() {
@@ -27,6 +31,9 @@ class VoiceMessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voice_message)
+
+        updateList()
+
         findViewById<Button>(R.id.btn_record).setOnClickListener(View.OnClickListener {
             var text = ""
             if (isRecording) {
@@ -51,7 +58,7 @@ class VoiceMessageActivity : AppCompatActivity() {
         })
         findViewById<Button>(R.id.btn_send_voice).setOnClickListener(View.OnClickListener {
             if (!isRecording && !isPlaying && vm != null) {
-                Toast.makeText(this, "送信しています", Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, "送信しています", Toast.LENGTH_LONG).show()
                 val dbHandler = DBOpenHelper(this, null)
                 dbHandler.addMessage(vm!!)
                 updateList()
@@ -130,14 +137,27 @@ class VoiceMessageActivity : AppCompatActivity() {
     }
 
     fun updateList() {
+        val listAdapter = VoiceMessageAdapter(applicationContext)
+
         val dbHandler = DBOpenHelper(this, null)
         val cursor = dbHandler.getAllVoiceMessage()
         cursor!!.moveToFirst()
         var count = 0
+        val voiceMessages: MutableList<VoiceMessage> = ArrayList()
         do {
-            val text = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_FILENAME))
             count++
+            val filename = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_FILENAME))
+            val date = Date(cursor.getLong(cursor.getColumnIndex(DBOpenHelper.COLUMN_CREATED_AT)))
+            Log.d("list", filename)
+            val vm = VoiceMessage(filename, date)
+            vm.id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_ID))
+            voiceMessages.add(vm)
         } while (cursor.moveToNext())
-        Toast.makeText(this, count.toString(), Toast.LENGTH_LONG).show()
+
+        listAdapter.voiceMessages = voiceMessages.toList()
+        Log.d("list", listAdapter.voiceMessages.size.toString())
+        val listView: ListView = findViewById(R.id.listview_voice_message) as ListView
+
+        listView.adapter = listAdapter
     }
 }
