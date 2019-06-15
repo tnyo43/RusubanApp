@@ -27,7 +27,6 @@ class VoiceMessage {
         private val DIR = Environment.getExternalStorageDirectory().absolutePath
 
         fun createNewMessage(): VoiceMessage {
-            val time = Date().time.toString()
             val filename = DIR + FILE_FORMAT.format(System.currentTimeMillis() / 1000)
             return VoiceMessage(filename, null)
         }

@@ -7,13 +7,15 @@
     android:padding="16dp"
     android:background="@drawable/border_black">
 
-    <ImageView
-        android:id="@+id/img_garally_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_garally_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="再生"/>
 
     <TextView
-        android:id="@+id/date_garally_image"
+        android:id="@+id/date_garally_voice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2019/06/20 12:34:56"

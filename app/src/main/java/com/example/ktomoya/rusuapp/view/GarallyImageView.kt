@@ -20,8 +20,6 @@ class GarallyImageView  : FrameLayout {
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
-
     val imageView: ImageView by bindView(R.id.img_garally_image)
     val dateTextView: TextView by bindView(R.id.date_garally_image)
 
