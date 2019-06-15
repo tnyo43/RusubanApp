@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import com.example.ktomoya.rusuapp.model.GarallyImage
 import com.example.ktomoya.rusuapp.model.GarallyItem
 import com.example.ktomoya.rusuapp.model.GarallyVoice
@@ -85,7 +84,8 @@ class DatabaseHandler (context: Context, factory: SQLiteDatabase.CursorFactory?)
                 val filename = cursor.getString(cursor.getColumnIndex(VoiceMessageDB.COLUMN_FILENAME))
                 val date = Date(cursor.getLong(cursor.getColumnIndex(VoiceMessageDB.COLUMN_CREATED_AT)))
                 val vm = VoiceMessage(filename, date)
-                vm.id = cursor.getInt(cursor.getColumnIndex(GarallyDB.COLUMN_ID))
+                vm.id = cursor.getInt(cursor.getColumnIndex(VoiceMessageDB.COLUMN_ID))
+                vm.memo = cursor.getString(cursor.getColumnIndex(VoiceMessageDB.COLUMN_MEMO))
                 voiceMessages.add(vm)
             } while (cursor.moveToNext())
         }
@@ -110,12 +110,12 @@ class DatabaseHandler (context: Context, factory: SQLiteDatabase.CursorFactory?)
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(VoiceMessageDB.COLUMN_MEMO, vm.memo)
-        db.update(VoiceMessageDB.TABLE_NAME, cv, VoiceMessageDB.COLUMN_ID + " = ?", arrayOf(vm.id.toString()))
+        db.update(VoiceMessageDB.TABLE_NAME, cv, "${VoiceMessageDB.COLUMN_ID} = ?", arrayOf(vm.id.toString()))
     }
 
     fun deleteMessage(vm: VoiceMessage) {
         val db = this.writableDatabase
-        db.delete(VoiceMessageDB.TABLE_NAME, VoiceMessageDB.COLUMN_ID + " = ?", arrayOf(vm.id.toString()))
+        db.delete(VoiceMessageDB.TABLE_NAME, "${VoiceMessageDB.COLUMN_ID} = ?", arrayOf(vm.id.toString()))
         File(vm.filename).delete()
     }
 
@@ -130,7 +130,6 @@ class DatabaseHandler (context: Context, factory: SQLiteDatabase.CursorFactory?)
                 val date = Date(cursor.getLong(cursor.getColumnIndex(GarallyDB.COLUMN_CREATED_AT)))
                 val type = cursor.getString(cursor.getColumnIndex(GarallyDB.COLUMN_FILETYPE))
                 val gi = if (type == GarallyDB.TYPE_IMAGE) GarallyImage(filename, date) else GarallyVoice(filename, date)
-                Log.d(gi.filename, gi.fileType)
                 gi.id = cursor.getInt(cursor.getColumnIndex(GarallyDB.COLUMN_ID))
                 garallyItems.add(gi)
             } while (cursor.moveToNext())
@@ -139,8 +138,6 @@ class DatabaseHandler (context: Context, factory: SQLiteDatabase.CursorFactory?)
     }
 
     fun addGarallyItem(gi: GarallyItem) {
-        Log.d("add", gi.filename)
-        Log.d("add", gi.fileType)
         val values = ContentValues()
         values.put(GarallyDB.COLUMN_FILENAME, gi.filename)
         values.put(GarallyDB.COLUMN_CREATED_AT, (gi.createdAt?: Date()).time)
