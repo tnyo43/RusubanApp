@@ -1,5 +1,7 @@
 package com.example.ktomoya.rusubanapp
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.ktomoya.rusuapp.R
@@ -7,15 +9,16 @@ import android.media.MediaRecorder
 import java.io.File
 import java.io.IOException
 import android.media.MediaPlayer
-import android.os.Environment
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ListView
-import android.widget.Toast
 import com.example.ktomoya.rusuapp.helper.DBOpenHelper
 import com.example.ktomoya.rusuapp.model.VoiceMessage
 import com.example.ktomoya.rusuapp.view.VoiceMessageAdapter
+import com.example.ktomoya.rusuapp.view.VoiceMessageView
 import java.util.*
 
 
@@ -34,36 +37,53 @@ class VoiceMessageActivity : AppCompatActivity() {
 
         updateList()
 
-        findViewById<Button>(R.id.btn_record).setOnClickListener(View.OnClickListener {
+        findViewById<Button>(R.id.btn_record).setOnClickListener {
             var text = ""
             if (isRecording) {
                 stopRecord()
                 text = "録音"
             } else {
+                resetVoiceMessage()
                 startRecord()
                 text = "録音終了"
             }
             findViewById<Button>(R.id.btn_record).setText(text)
-        })
-        findViewById<Button>(R.id.btn_play).setOnClickListener(android.view.View.OnClickListener {
+        }
+        findViewById<Button>(R.id.btn_play).setOnClickListener {
             var text = ""
             if (isPlaying) {
                 stopPlay()
-                text = "再生"
             } else {
                 startPlay()
-                text = "停止"
             }
-            findViewById<Button>(R.id.btn_record).setText(text)
-        })
-        findViewById<Button>(R.id.btn_send_voice).setOnClickListener(View.OnClickListener {
+            playing()
+            findViewById<Button>(R.id.btn_play).setText(text)
+        }
+
+        findViewById<Button>(R.id.btn_send_voice).setOnClickListener {
             if (!isRecording && !isPlaying && vm != null) {
-                //Toast.makeText(this, "送信しています", Toast.LENGTH_LONG).show()
                 val dbHandler = DBOpenHelper(this, null)
                 dbHandler.addMessage(vm!!)
                 updateList()
             }
-        })
+        }
+
+        findViewById<Button>(R.id.btn_delte_voice_message).setOnClickListener {
+            if (vm != null) {
+                AlertDialog.Builder(this).apply {
+                    setTitle("この音声を消しますか？")
+                    setMessage(vm!!.filename)
+                    setPositiveButton("消す", { _, _ ->
+                        val dbHandler = DBOpenHelper(applicationContext, null)
+                        dbHandler.deleteMessage(vm!!)
+                        resetVoiceMessage()
+                    })
+                    setNegativeButton("キャンセル", null)
+                    show()
+                }
+
+            }
+        }
     }
 
     fun startRecord() {
@@ -98,6 +118,7 @@ class VoiceMessageActivity : AppCompatActivity() {
             mediaRecorder = null
             this.isRecording = false
             this.isPlaying = false
+            updateVoiceMessage(vm!!)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -105,18 +126,22 @@ class VoiceMessageActivity : AppCompatActivity() {
 
     fun startPlay() {
         if (vm != null) {
+            Log.d("play", vm!!.filename)
             try {
                 mediaPlayer = MediaPlayer()
                 mediaPlayer!!.setDataSource(vm!!.filename)
                 mediaPlayer!!.prepare()
-                mediaPlayer!!.setOnCompletionListener(MediaPlayer.OnCompletionListener {
+                mediaPlayer!!.setOnCompletionListener{
                     this.isRecording = false
                     this.isPlaying = false
-                })
+                    playing()
+                }
                 mediaPlayer!!.start()
                 this.isRecording = false
                 this.isPlaying = true
             } catch (e: IOException) {
+                Log.d("play", e.toString())
+
                 e.printStackTrace()
             }
         }
@@ -141,23 +166,42 @@ class VoiceMessageActivity : AppCompatActivity() {
 
         val dbHandler = DBOpenHelper(this, null)
         val cursor = dbHandler.getAllVoiceMessage()
-        cursor!!.moveToFirst()
-        var count = 0
+
         val voiceMessages: MutableList<VoiceMessage> = ArrayList()
-        do {
-            count++
-            val filename = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_FILENAME))
-            val date = Date(cursor.getLong(cursor.getColumnIndex(DBOpenHelper.COLUMN_CREATED_AT)))
-            Log.d("list", filename)
-            val vm = VoiceMessage(filename, date)
-            vm.id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_ID))
-            voiceMessages.add(vm)
-        } while (cursor.moveToNext())
+        if (cursor!!.moveToFirst()) {
+            do {
+                val filename = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_FILENAME))
+                val date = Date(cursor.getLong(cursor.getColumnIndex(DBOpenHelper.COLUMN_CREATED_AT)))
+                val vm = VoiceMessage(filename, date)
+                vm.id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_ID))
+                voiceMessages.add(vm)
+            } while (cursor.moveToNext())
+        }
 
         listAdapter.voiceMessages = voiceMessages.toList()
-        Log.d("list", listAdapter.voiceMessages.size.toString())
         val listView: ListView = findViewById(R.id.listview_voice_message) as ListView
 
         listView.adapter = listAdapter
+        listView.setOnItemClickListener { adapterView, view, position, id ->
+            Log.d("click", "clicked")
+            val vm = listAdapter.voiceMessages[position]
+            updateVoiceMessage(vm)
+        }
+    }
+
+    fun updateVoiceMessage(vm: VoiceMessage) {
+        this.vm = vm
+        findViewById<EditText>(R.id.edit_voice_message).setText(vm.filename)
+        updateList()
+    }
+
+    fun resetVoiceMessage() {
+        this.vm = null
+        findViewById<EditText>(R.id.edit_voice_message).setText("")
+        updateList()
+    }
+
+    fun playing() {
+        findViewById<Button>(R.id.btn_play).setText(if (isPlaying) "停止" else "再生")
     }
 }

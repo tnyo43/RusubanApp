@@ -13,22 +13,51 @@
         android:id="@+id/listview_voice_message">
     </ListView>
 
+    <LinearLayout
+        android:layout_margin="10px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/btn_delte_voice_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="削除" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_voice_message"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_play"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="再生" />
+
+            <Button
+                android:id="@+id/btn_send_voice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="送信" />
+        </LinearLayout>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="録音" />
 
-    <Button
-        android:id="@+id/btn_play"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="再生" />
 
-
-    <Button
-        android:id="@+id/btn_send_voice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="送信" />
 </LinearLayout>

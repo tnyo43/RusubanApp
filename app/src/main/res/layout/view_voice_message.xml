@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:id="@+id/layout_voice_message"
+    android:background="@drawable/border_black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,12 +37,4 @@
             android:layout_height="wrap_content"
             android:text="TextView" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_delete_voice_message"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_weight="1"
-        android:textSize="28dp"
-        android:text="×" />
 </LinearLayout>
