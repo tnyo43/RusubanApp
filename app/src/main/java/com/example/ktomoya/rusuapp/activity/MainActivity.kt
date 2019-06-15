@@ -1,4 +1,4 @@
-package com.example.ktomoya.rusubanapp
+package com.example.ktomoya.rusuapp.activity
 
 import android.Manifest
 import android.content.Intent
@@ -17,6 +17,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_goto_voice_message).setOnClickListener(View.OnClickListener {it ->
             val intent = Intent(this, VoiceMessageActivity::class.java)
+            startActivity(intent)
+        })
+        findViewById<Button>(R.id.btn_goto_gallery).setOnClickListener(View.OnClickListener {it ->
+            val intent = Intent(this, GarallyActivity::class.java)
             startActivity(intent)
         })
 

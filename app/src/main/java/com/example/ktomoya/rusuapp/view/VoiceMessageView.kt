@@ -1,16 +1,11 @@
 package com.example.ktomoya.rusuapp.view
 
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.text.Layout
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.ktomoya.rusuapp.R
-import com.example.ktomoya.rusuapp.helper.DBOpenHelper
 import com.example.ktomoya.rusuapp.model.VoiceMessage
 import java.text.SimpleDateFormat
 

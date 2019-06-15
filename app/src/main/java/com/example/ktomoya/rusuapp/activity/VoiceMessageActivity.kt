@@ -1,7 +1,5 @@
-package com.example.ktomoya.rusubanapp
+package com.example.ktomoya.rusuapp.activity
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.ktomoya.rusuapp.R
@@ -11,14 +9,12 @@ import java.io.IOException
 import android.media.MediaPlayer
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import com.example.ktomoya.rusuapp.helper.DBOpenHelper
+import com.example.ktomoya.rusuapp.helper.VoiceMessageDB
 import com.example.ktomoya.rusuapp.model.VoiceMessage
 import com.example.ktomoya.rusuapp.view.VoiceMessageAdapter
-import com.example.ktomoya.rusuapp.view.VoiceMessageView
 import java.util.*
 
 
@@ -68,7 +64,7 @@ class VoiceMessageActivity : AppCompatActivity() {
                     setTitle("この音声を消しますか？")
                     setMessage(vm!!.filename)
                     setPositiveButton("消す", { _, _ ->
-                        val dbHandler = DBOpenHelper(applicationContext, null)
+                        val dbHandler = VoiceMessageDB(applicationContext, null)
                         dbHandler.deleteMessage(vm!!)
                         resetVoiceMessage()
                     })
@@ -114,7 +110,7 @@ class VoiceMessageActivity : AppCompatActivity() {
             updateVoiceMessage(vm!!)
 
             vm!!.memo = findViewById<EditText>(R.id.edit_voice_message).text.toString()
-            val dbHandler = DBOpenHelper(this, null)
+            val dbHandler = VoiceMessageDB(this, null)
             dbHandler.addMessage(vm!!)
             updateList()
         } catch (e: Exception) {
@@ -162,23 +158,23 @@ class VoiceMessageActivity : AppCompatActivity() {
     fun updateList() {
         if (vm != null) {
             vm!!.memo = findViewById<EditText>(R.id.edit_voice_message).text.toString()
-            val dbHandler = DBOpenHelper(this, null)
+            val dbHandler = VoiceMessageDB(this, null)
             dbHandler.updateMemo(vm!!)
         }
 
         val listAdapter = VoiceMessageAdapter(applicationContext)
 
-        val dbHandler = DBOpenHelper(this, null)
+        val dbHandler = VoiceMessageDB(this, null)
         val cursor = dbHandler.getAllVoiceMessage()
 
         val voiceMessages: MutableList<VoiceMessage> = ArrayList()
         if (cursor!!.moveToFirst()) {
             do {
-                val filename = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_FILENAME))
-                val date = Date(cursor.getLong(cursor.getColumnIndex(DBOpenHelper.COLUMN_CREATED_AT)))
+                val filename = cursor.getString(cursor.getColumnIndex(VoiceMessageDB.COLUMN_FILENAME))
+                val date = Date(cursor.getLong(cursor.getColumnIndex(VoiceMessageDB.COLUMN_CREATED_AT)))
                 val vm = VoiceMessage(filename, date)
-                vm.id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_ID))
-                vm.memo = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_MEMO))
+                vm.id = cursor.getInt(cursor.getColumnIndex(VoiceMessageDB.COLUMN_ID))
+                vm.memo = cursor.getString(cursor.getColumnIndex(VoiceMessageDB.COLUMN_MEMO))
                 voiceMessages.add(vm)
             } while (cursor.moveToNext())
         }

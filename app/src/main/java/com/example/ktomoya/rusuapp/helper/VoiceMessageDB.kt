@@ -9,26 +9,26 @@ import com.example.ktomoya.rusuapp.model.VoiceMessage
 import java.io.File
 import java.util.*
 
-class DBOpenHelper (context: Context, factory: SQLiteDatabase.CursorFactory?) :
+class VoiceMessageDB (context: Context, factory: SQLiteDatabase.CursorFactory?) :
                     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         val query = (
                 "CREATE TABLE "
-                        + DBOpenHelper.TABLE_NAME + "("
-                        + DBOpenHelper.COLUMN_ID + " INTEGER PRIMARY KEY,"
-                        + DBOpenHelper.COLUMN_FILENAME + " TEXT NOT NULL,"
-                        + DBOpenHelper.COLUMN_MEMO + " TEXT NOT NULL,"
-                        + DBOpenHelper.COLUMN_CREATED_AT + " LONG NOT NULL,"
-                        + DBOpenHelper.COLUMN_SENT_AT + " LONG,"
-                        + DBOpenHelper.COLUMN_IS_SENT + " INT,"
-                        + DBOpenHelper.COLUMN_IS_PLAYED + " INT"
+                        + TABLE_NAME + "("
+                        + COLUMN_ID + " INTEGER PRIMARY KEY,"
+                        + COLUMN_FILENAME + " TEXT NOT NULL,"
+                        + COLUMN_MEMO + " TEXT NOT NULL,"
+                        + COLUMN_CREATED_AT + " LONG NOT NULL,"
+                        + COLUMN_SENT_AT + " LONG,"
+                        + COLUMN_IS_SENT + " INT,"
+                        + COLUMN_IS_PLAYED + " INT"
                         + ")")
         db.execSQL(query)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        val query = "DROP TABLE IF EXISTS " + DBOpenHelper.TABLE_NAME
+        val query = "DROP TABLE IF EXISTS " + TABLE_NAME
         db.execSQL(query)
         onCreate(db)
     }
