@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, VoiceMessageActivity::class.java)
             startActivity(intent)
         })
+        findViewById<Button>(R.id.btn_goto_key).setOnClickListener(View.OnClickListener {it ->
+            val intent = Intent(this, KeyActivity::class.java)
+            startActivity(intent)
+        })
         findViewById<Button>(R.id.btn_goto_gallery).setOnClickListener(View.OnClickListener {it ->
             val intent = Intent(this, GarallyActivity::class.java)
             startActivity(intent)

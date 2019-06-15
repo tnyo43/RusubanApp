@@ -15,11 +15,7 @@ class GarallyActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_garally)
 
-
         val dbHandler = DatabaseHandler(this, null)
-        dbHandler.addGarallyItem(GarallyVoice.createGarallyVoice())
-        dbHandler.addGarallyItem(GarallyImage.createGarallyImage())
-
         updateList()
     }
 

@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".activity.VoiceMessageActivity" />
         <activity android:name=".activity.GarallyActivity" />
+        <activity android:name=".activity.KeyActivity" />
     </application>
 
 </manifest>
