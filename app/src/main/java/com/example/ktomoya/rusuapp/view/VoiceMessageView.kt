@@ -34,7 +34,7 @@ class VoiceMessageView : FrameLayout {
     }
 
     fun setVoiceMessage(vm: VoiceMessage) {
-        titleTextView.text = vm.filename
+        titleTextView.text = vm.memo
         dateTextView.text = SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(vm.createdAt)
         isPlayedTextView.text = if (vm.isPlayed) "済" else "未"
         isSentTextView.text = if (vm.isSent) "済" else "未"

@@ -6,6 +6,7 @@ import java.util.*
 class VoiceMessage {
     var id: Int = -1
     var filename: String? = null
+    var memo: String? = null
     var createdAt: Date? = null
     var sentAt: Date? = null
     var isSent = false
@@ -14,6 +15,7 @@ class VoiceMessage {
     constructor(filename:String, date:Date?) {
         this.id = -1
         this.filename = filename
+        this.memo = "無題"
         this.createdAt = date?: Date()
         this.sentAt = null
         this.isSent = false

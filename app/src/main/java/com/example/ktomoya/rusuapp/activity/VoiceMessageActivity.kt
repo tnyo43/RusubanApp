@@ -50,22 +50,16 @@ class VoiceMessageActivity : AppCompatActivity() {
             findViewById<Button>(R.id.btn_record).setText(text)
         }
         findViewById<Button>(R.id.btn_play).setOnClickListener {
-            var text = ""
             if (isPlaying) {
                 stopPlay()
             } else {
                 startPlay()
             }
             playing()
-            findViewById<Button>(R.id.btn_play).setText(text)
         }
 
         findViewById<Button>(R.id.btn_send_voice).setOnClickListener {
-            if (!isRecording && !isPlaying && vm != null) {
-                val dbHandler = DBOpenHelper(this, null)
-                dbHandler.addMessage(vm!!)
-                updateList()
-            }
+
         }
 
         findViewById<Button>(R.id.btn_delte_voice_message).setOnClickListener {
@@ -81,7 +75,6 @@ class VoiceMessageActivity : AppCompatActivity() {
                     setNegativeButton("キャンセル", null)
                     show()
                 }
-
             }
         }
     }
@@ -119,6 +112,11 @@ class VoiceMessageActivity : AppCompatActivity() {
             this.isRecording = false
             this.isPlaying = false
             updateVoiceMessage(vm!!)
+
+            vm!!.memo = findViewById<EditText>(R.id.edit_voice_message).text.toString()
+            val dbHandler = DBOpenHelper(this, null)
+            dbHandler.addMessage(vm!!)
+            updateList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -162,6 +160,12 @@ class VoiceMessageActivity : AppCompatActivity() {
     }
 
     fun updateList() {
+        if (vm != null) {
+            vm!!.memo = findViewById<EditText>(R.id.edit_voice_message).text.toString()
+            val dbHandler = DBOpenHelper(this, null)
+            dbHandler.updateMemo(vm!!)
+        }
+
         val listAdapter = VoiceMessageAdapter(applicationContext)
 
         val dbHandler = DBOpenHelper(this, null)
@@ -174,6 +178,7 @@ class VoiceMessageActivity : AppCompatActivity() {
                 val date = Date(cursor.getLong(cursor.getColumnIndex(DBOpenHelper.COLUMN_CREATED_AT)))
                 val vm = VoiceMessage(filename, date)
                 vm.id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.COLUMN_ID))
+                vm.memo = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COLUMN_MEMO))
                 voiceMessages.add(vm)
             } while (cursor.moveToNext())
         }
@@ -191,7 +196,7 @@ class VoiceMessageActivity : AppCompatActivity() {
 
     fun updateVoiceMessage(vm: VoiceMessage) {
         this.vm = vm
-        findViewById<EditText>(R.id.edit_voice_message).setText(vm.filename)
+        findViewById<EditText>(R.id.edit_voice_message).setText(vm.memo)
         updateList()
     }
 
@@ -203,5 +208,6 @@ class VoiceMessageActivity : AppCompatActivity() {
 
     fun playing() {
         findViewById<Button>(R.id.btn_play).setText(if (isPlaying) "停止" else "再生")
+        updateList()
     }
 }

@@ -18,6 +18,7 @@ class DBOpenHelper (context: Context, factory: SQLiteDatabase.CursorFactory?) :
                         + DBOpenHelper.TABLE_NAME + "("
                         + DBOpenHelper.COLUMN_ID + " INTEGER PRIMARY KEY,"
                         + DBOpenHelper.COLUMN_FILENAME + " TEXT NOT NULL,"
+                        + DBOpenHelper.COLUMN_MEMO + " TEXT NOT NULL,"
                         + DBOpenHelper.COLUMN_CREATED_AT + " LONG NOT NULL,"
                         + DBOpenHelper.COLUMN_SENT_AT + " LONG,"
                         + DBOpenHelper.COLUMN_IS_SENT + " INT,"
@@ -33,13 +34,15 @@ class DBOpenHelper (context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun getAllVoiceMessage(): Cursor? {
+
         val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        return db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_CREATED_AT DESC", null) //arrayOf(String.format("%s DESC", COLUMN_CREATED_AT)))
     }
 
     fun addMessage(vm: VoiceMessage) {
         val values = ContentValues()
         values.put(COLUMN_FILENAME, vm.filename)
+        values.put(COLUMN_MEMO, vm.memo)
         values.put(COLUMN_CREATED_AT, (vm.createdAt?: Date()).time)
         if (vm.sentAt != null)
             values.put(COLUMN_SENT_AT, vm.sentAt!!.time)
@@ -48,6 +51,13 @@ class DBOpenHelper (context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val db = this.writableDatabase
         db.insert(TABLE_NAME, null, values)
         db.close()
+    }
+
+    fun updateMemo(vm: VoiceMessage) {
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        cv.put(COLUMN_MEMO, vm.memo)
+        db.update(TABLE_NAME, cv, COLUMN_ID + " = ?", arrayOf(vm.id.toString()))
     }
 
     fun deleteMessage(vm: VoiceMessage) {
@@ -62,6 +72,7 @@ class DBOpenHelper (context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val TABLE_NAME = "voice_tbl"
         val COLUMN_ID = "id"
         val COLUMN_FILENAME = "filename"
+        val COLUMN_MEMO = "memo"
         val COLUMN_CREATED_AT = "updated_at"
         val COLUMN_SENT_AT = "send_at"
         val COLUMN_IS_SENT = "is_sent"

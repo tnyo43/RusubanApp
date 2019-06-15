@@ -19,5 +19,6 @@ class VoiceMessageAdapter(private val context: Context): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View =
             ((convertView as? VoiceMessageView) ?: VoiceMessageView(context)).apply {
                 setVoiceMessage(voiceMessages[position])
+
             }
 }
