@@ -23,6 +23,7 @@
         <activity android:name=".activity.VoiceMessageActivity" />
         <activity android:name=".activity.GarallyActivity" />
         <activity android:name=".activity.KeyActivity" />
+        <activity android:name=".activity.MonitorActivity" />
     </application>
 
 </manifest>
