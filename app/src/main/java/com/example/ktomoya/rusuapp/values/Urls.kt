@@ -7,10 +7,11 @@ open class Urls {
         val PORT = "5000"
 
         val UPLOAD_AUDIO = "/upload"
-        val STREAMING = "/streaming"
+        val STREAMING = "/~pi/stream.html"
 
-        fun getAddress() = HTTP + IP + ":" + PORT
-        fun getUploadAudioAdress() = getAddress() + UPLOAD_AUDIO
-        fun getStreamingAddress() = getAddress() + STREAMING
+        fun getAddress() = HTTP + IP
+        fun getAddressWithPort() = HTTP + IP + ":" + PORT
+        fun getUploadAudioAdress() = getAddressWithPort() + UPLOAD_AUDIO
+        fun getStreamingAddress() =  getAddress() + STREAMING
     }
 }
