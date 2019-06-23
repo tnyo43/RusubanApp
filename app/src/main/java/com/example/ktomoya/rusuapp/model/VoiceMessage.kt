@@ -23,7 +23,7 @@ class VoiceMessage {
     }
 
     companion object {
-        private val FILE_FORMAT = "/voice_%d.acc"
+        private val FILE_FORMAT = "/voice_%d.mp3"
         private val DIR = Environment.getExternalStorageDirectory().absolutePath
 
         fun createNewMessage(): VoiceMessage {
