@@ -1,5 +1,6 @@
 package com.example.ktomoya.rusuapp.activity
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.ktomoya.rusuapp.R
@@ -15,8 +16,10 @@ import android.widget.EditText
 import android.widget.ListView
 import com.example.ktomoya.rusuapp.helper.DatabaseHandler
 import com.example.ktomoya.rusuapp.model.VoiceMessage
+import com.example.ktomoya.rusuapp.values.Urls
 import com.example.ktomoya.rusuapp.view.VoiceMessageAdapter
 import okhttp3.*
+import kotlin.coroutines.experimental.coroutineContext
 
 
 class VoiceMessageActivity : AppCompatActivity() {
@@ -197,7 +200,7 @@ class VoiceMessageActivity : AppCompatActivity() {
         constructor()
 
         override fun doInBackground(vararg filename: String?): String {
-            val url = "http://192.168.11.5:5000/upload"
+            val url = Urls.getUploadAudioAdress()
             val file = File(filename[0])
             val requestBody: RequestBody = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
