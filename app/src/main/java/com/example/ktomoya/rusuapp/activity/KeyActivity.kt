@@ -9,6 +9,7 @@ import com.example.ktomoya.rusuapp.R
 class KeyActivity : AppCompatActivity() {
 
     val TAG = "KEY ACTIVITY"
+    var isOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,11 +17,7 @@ class KeyActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_open_key).setOnClickListener {
             // open
-            Log.d(TAG, "open")
-        }
-        findViewById<Button>(R.id.btn_close_key).setOnClickListener {
-            // close
-            Log.d(TAG, "close")
+            isOpen = !isOpen
         }
     }
 }

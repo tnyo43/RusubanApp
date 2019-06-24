@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
 
     <Button
         android:id="@+id/btn_goto_voice_message"
         android:layout_width="match_parent"
-        android:layout_height="66dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:text="ボイスメッセージ" />
 
     <Button
         android:id="@+id/btn_goto_camera"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:text="見守りカメラ" />
 
     <Button
         android:id="@+id/btn_goto_key"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:text="鍵" />
 
     <Button
         android:id="@+id/btn_goto_gallery"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:text="ギャラリー" />
-
-    <Button
-        android:id="@+id/btn_goto_talk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="おはなし" />
 </LinearLayout>
